@@ -1,12 +1,12 @@
- const Discord = require('discord.js');
+const Discord = require('discord.js');
 const Client = new Discord.Client();
 const token = ""; // Use ur DC token
-let prefix = ""; // Use ur prefix
+const prefix = ""; // Use ur prefix
 const axios = require("axios");
 const server = await axios.get(`https://api.altv.mp/server/YOUR-ID`, { responseType: 'json' }); // Use your Server ID from: https://api.altv.mp/servers/list
 
 // Simple Replys + Status Command
-client.on('message', message => {
+Client.on('message', message => {
     if(message.author.id == client.user.id){
         return;
       }
