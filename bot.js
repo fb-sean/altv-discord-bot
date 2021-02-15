@@ -3,6 +3,7 @@ const Client = new Discord.Client();
 const token = ""; // Use ur DC token
 const prefix = ""; // Use ur prefix
 const axios = require("axios");
+const talkedRecently = new Set();
 const server = await axios.get(`https://api.altv.mp/server/YOUR-ID`, { responseType: 'json' }); // Use your Server ID from: https://api.altv.mp/servers/list
 
 // Simple Replys + Status Command
