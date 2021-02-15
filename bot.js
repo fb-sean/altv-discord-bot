@@ -11,6 +11,9 @@ Client.on('message', message => {
     if(message.author.id == client.user.id){
         return;
       }
+      if(message.author.bot){
+        return;
+      }
 	if(message.mentions.users.size){
 		if(message.mentions.users.first().id == client.user.id){
         	return message.channel.send(`My Prefix is \`\`${prefix}\`\`😄`)
