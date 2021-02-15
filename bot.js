@@ -56,7 +56,7 @@ Client.on("ready", () => {
   console.log(`${Client.user.tag} is starting, have fun!.`);
   Client.user.setStatus(`dnd`);
   const activity = server.data.info.players + "/" + server.data.info.maxPlayers;
-  Client.user.setActivity(`${activity} | ${prefix}help`, { type: PLAYING })
+  Client.user.setActivity(`${activity} | ${prefix}help`, { type: WATSCHING })
 });
 
 //Login
