@@ -3,7 +3,9 @@ const Client = new Discord.Client();
 const token = ""; // Use ur DC token
 const prefix = ""; // Use ur prefix
 const axios = require("axios");
-const talkedRecently = new Set();
+const talkedRecently = new Set(); // Cooldown
+
+
 const server = await axios.get(`https://api.altv.mp/server/YOUR-ID`, { responseType: 'json' }); // Use your Server ID from: https://api.altv.mp/servers/list
 
 // Simple Replys + Status Command
@@ -29,7 +31,6 @@ Client.on('message', message => {
 
             
                  if (message.content.toLowerCase() === '/status') {
-                    if(!server.data.active) { online = "No" } else if (server.data.active) { online = "Yes" }
                     let serverstats = new Discord.MessageEmbed() 
                     .setTitle(`${server.data.info.name}`)   
                     .setDescription([ 
