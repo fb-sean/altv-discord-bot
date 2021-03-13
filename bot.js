@@ -6,11 +6,11 @@ const axios = require("axios");
 const talkedRecently = new Set(); // Cooldown
 
 
-const server = await axios.get(`https://api.altv.mp/server/YOUR-ID`, { responseType: 'json' }); // Use your Server ID from: https://api.altv.mp/servers/list
+
 
 // Simple Replys + Status Command
-Client.on('message', message => {
-    if(message.author.id == client.user.id){
+Client.on('message', async message => {
+    if(message.author.id == Client.user.id){
         return;
       }
       if(message.author.bot){
@@ -30,22 +30,46 @@ Client.on('message', message => {
             } else {
 
             
-                 if (message.content.toLowerCase() === '/status') {
-                    let serverstats = new Discord.MessageEmbed() 
+                 if (message.content.toLowerCase() === `${prefix}status`) {
+                    let serverstatsoffline = new Discord.MessageEmbed() 
+                    .setTitle(`None`)   
+                    .setDescription([ 
+                    "**Players** " + "\`0/0\`",
+                    "**Status** " + "Offline 🔴",
+                    "**Website** " + "Offline 🔴"
+                                ]) 
+                    .setTimestamp()
+                    
+                    if(message.author.avatarURL) {
+                        serverstatsoffline.setFooter(`Requested by : ${message.author.username}#${message.author.discriminator}`, `${message.author.avatarURL({ dynamic: true, format: 'png', size: 1024 })}`)
+                    } else {
+                        serverstatsoffline.setFooter(`Requested by : ${message.author.username}#${message.author.discriminator}`)
+                    }
+
+                    let server
+                    try {
+                        server = await axios.get(`https://api.altv.mp/server/YOUR-ID`, { responseType: 'json' }); // Use your Server ID from: https://api.altv.mp/servers/list
+                    }      
+                    catch (e) {
+                        return message.channel.send(serverstatsoffline) 
+                    }
+
+
+                    let serverstatsonline = new Discord.MessageEmbed() 
                     .setTitle(`${server.data.info.name}`)   
                     .setDescription([ 
                     "**Players** " + "\`" + server.data.info.players + "/" + server.data.info.maxPlayers + "\`",
-                    "**Online** " + "\`" + server.data.active + "\`",
+                    "**Status** " + "Online 🟢",
                     "**Website** " + "https://" + server.data.info.website
-                                ]) 
+                                ])
                     .setTimestamp()
-                    }
+                    
                     if(message.author.avatarURL) {
-                        serverstats.setFooter(`Requested by : ${message.author.username}#${message.author.discriminator}`, `${message.author.avatarURL({ dynamic: true, format: 'png', size: 1024 })}`)
+                        serverstatsonline.setFooter(`Requested by : ${message.author.username}#${message.author.discriminator}`, `${message.author.avatarURL({ dynamic: true, format: 'png', size: 1024 })}`)
                     } else {
-                        serverstats.setFooter(`Requested by : ${message.author.username}#${message.author.discriminator}`)
+                        serverstatsonline.setFooter(`Requested by : ${message.author.username}#${message.author.discriminator}`)
                     }
-                    message.channel.send(serverstats)
+                    message.channel.send(serverstatsonline)
             
             talkedRecently.add(message.author.id);
             setTimeout(() => {
@@ -53,16 +77,24 @@ Client.on('message', message => {
             talkedRecently.delete(message.author.id);
             }, 60000);  // Command Cooldown
         }
-
+    }
 });
 
 // Client Ready
-Client.on("ready", () => {
+Client.on("ready", async () => {
+    let server
+    try {
+        server = await axios.get(`https://api.altv.mp/server/YOUR-ID`, { responseType: 'json' }); // Use your Server ID from: https://api.altv.mp/servers/list
+    }      
+    catch (e) {
+        return console.log("Cant find the Server") 
+    }
+
   console.log(`${Client.user.tag} is starting, have fun!.`);
   Client.user.setStatus(`dnd`);
   const activity = server.data.info.players + "/" + server.data.info.maxPlayers;
-  Client.user.setActivity(`${activity} | ${prefix}help`, { type: WATCHING })
+  Client.user.setActivity(`${activity} Players | ${prefix}help`)
 });
 
 //Login
-Client.login(settings.key)
+Client.login(token)
